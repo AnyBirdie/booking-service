@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout the code repository (optional, not required for deployment)
+      # Checkout the code repository
       - name: Checkout Repository
         uses: actions/checkout@v3
 
@@ -26,7 +26,18 @@ jobs:
       # Authenticate Docker with ECR
       - name: Login to Amazon ECR
         run: |
-          aws ecr get-login-password --region ap-southeast-1 | docker login --username AWS --password-stdin 779846799056.dkr.ecr.ap-southeast-1.amazonaws.com/anybirdie/fab-booking-service
+          aws ecr get-login-password --region ap-southeast-1 | docker login --username AWS --password-stdin 779846799056.dkr.ecr.ap-southeast-1.amazonaws.com
+
+      # Build and Tag Docker Image
+      - name: Build Docker Image
+        run: |
+          docker build -t booking-service:latest .
+          docker tag booking-service:latest 779846799056.dkr.ecr.ap-southeast-1.amazonaws.com/anybirdie/fab-booking-service:latest
+
+      # Push Docker Image to ECR
+      - name: Push Docker Image to ECR
+        run: |
+          docker push 779846799056.dkr.ecr.ap-southeast-1.amazonaws.com/anybirdie/fab-booking-service:latest
 
       # Update ECS Service
       - name: Deploy to ECS
