@@ -31,7 +31,7 @@ jobs:
       # Build and Tag Docker Image
       - name: Build Docker Image
         run: |
-          docker build -t booking-service:latest .
+          docker build --build-arg NODE_ENV=development -t booking-service:latest .
           docker tag booking-service:latest 779846799056.dkr.ecr.ap-southeast-1.amazonaws.com/anybirdie/fab-booking-service:latest
 
       # Push Docker Image to ECR
